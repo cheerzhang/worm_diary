@@ -23,14 +23,26 @@ def login():
     st.sidebar.title("Login")
     username = st.sidebar.text_input("Username")
     password = st.sidebar.text_input("Password", type="password")
-    if st.sidebar.button("Login"):
-        role = authenticate_user(username, password)
-        if role:
-            st.session_state["role"] = role
-            st.session_state["logged_in"] = True
-            st.sidebar.success("Login successful!")
-        else:
-            st.sidebar.error("Invalid username or password")
+    login_, logout_ = st.sidebar.columns(2)
+    with login_:
+        if st.button("Login"):
+            role = authenticate_user(username, password)
+            if role:
+                st.session_state["role"] = role
+                st.session_state["logged_in"] = True
+                st.sidebar.success("Login successful!")
+            else:
+                st.sidebar.error("Invalid username or password")
+    with logout_:
+        if st.button('Logout'):
+            logout()
+
+def logout():
+    role = "guest"
+    st.session_state["role"] = role
+    st.session_state["logged_in"] = False
+    st.sidebar.success("Logout successful!")
+
 
 # 数据加载与保存
 def load_data():
@@ -48,39 +60,19 @@ def load_data():
 
 
 def save_data(df):
-    df.to_csv(CSV_FILE, index=False)
+    st.write(df)
+    try:
+        df.to_csv(CSV_FILE, index=False)
+        st.success("Data saved successfully!")
+    except Exception as e:
+        st.error(f"Failed to save data: {e}")
 
-def main():
-    if "logged_in" not in st.session_state:
-        st.session_state["logged_in"] = False
-        st.session_state["role"] = "guest"
 
-    # 显示登录表单
-    st.sidebar.title("Login")
-    if st.session_state["logged_in"]:
-        st.sidebar.success(f"Already logged in as {st.session_state['role']}")
-        if st.sidebar.button("Logout"):
-            st.session_state["logged_in"] = False
-            st.session_state["role"] = "guest"
-            st.sidebar.info("Logged out successfully!")
-    else:
-        username = st.sidebar.text_input("Username")
-        password = st.sidebar.text_input("Password", type="password")
-        if st.sidebar.button("Login"):
-            role = authenticate_user(username, password)
-            if role:
-                st.session_state["role"] = role
-                st.session_state["logged_in"] = True
-                st.sidebar.success(f"Login successful! Logged in as {role}")
-            else:
-                st.sidebar.error("Invalid username or password")
-
-    # 显示当前数据
-    st.title("Worm Diary")
+# 页面显示数据
+def show_data_page():
+    st.title("Worm Diary - View Data")
     df = load_data()
-    
     st.dataframe(df)
-    
 
     # 数据过滤
     st.subheader("Filter")
@@ -104,6 +96,10 @@ def main():
     total_fertilizer = df['generated_fertilizer'].sum()
     st.subheader(f"Total theoretical worm fertilizer produced: {total_fertilizer:.2f} g")
 
+
+# 页面添加数据
+def add_data_page():
+    st.title("Worm Diary - Add Data")
     if st.session_state["role"] == "admin":
         with st.form("entry_form"):
             date = st.date_input("Date", datetime.now())
@@ -114,16 +110,38 @@ def main():
             submit = st.form_submit_button("Add Entry")
 
             if submit:
-                new_entry = {
-                    "date": date,
-                    "food": food,
-                    "food_type": food_type,
-                    "quantity": quantity,
-                    "decomposition": decomposition
-                }
-                df = df.append(new_entry, ignore_index=True)
+                new_entry = pd.DataFrame({
+                    "date": [date],
+                    "food": [food],
+                    "food_type": [food_type],
+                    "quantity": [quantity],
+                    "decomposition": [decomposition]
+                })
+                
+                df = load_data()
+                df = pd.concat([df, new_entry], ignore_index=True)
+                
                 save_data(df)
-                st.success("Entry added successfully!")
+    else:
+        st.warning("You must be logged in as admin to add data.")
+
+
+
+# 运行应用
+def main():
+    if "logged_in" not in st.session_state:
+        st.session_state["logged_in"] = False
+        st.session_state["role"] = "guest"
+    login()
+    
+
+    page = st.sidebar.selectbox("Select Page", ["View Data", "Add Data"])
+
+    if page == "View Data":
+        show_data_page()
+    elif page == "Add Data":
+        add_data_page()
+
 
 
 # 运行应用
