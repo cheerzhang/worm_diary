@@ -1,15 +1,20 @@
-# Worm Diary - 蚯蚓日记
+# Worm Diary
 
-这是一个基于 Streamlit 构建的蚯蚓日记应用程序，用于记录和管理蚯蚓的喂食情况、食物分解状态以及产生的蚯蚓肥。应用分为两个页面：一个用于查看数据，另一个用于添加数据。应用还支持用户登录功能，区分游客和管理员权限。
+Here’s a sentence that conveys your message:
 
-## 功能简介
+You can log in to [https://wormdiary.streamlit.app/](https://wormdiary.streamlit.app/) to view my worm diary, which records each feeding and the decomposition timeline. This is a record of my worm farming journey, and I hope it serves as a useful reference for others.
 
-- **数据查看**：游客和管理员都可以查看和筛选蚯蚓的喂食记录。
-- **数据添加**：仅管理员可以添加新的喂食记录。
-- **用户登录**：支持用户登录，游客无需登录即可查看数据，但只有管理员可以添加数据。
-- **登录和登出**：用户可以随时在登录和登出之间切换。
+This introduction invites others to explore your worm diary while providing context about its purpose.
 
-## 项目结构
+## Features
+
+- **Data Viewing**: Both guests and admins can view and filter the worm feeding records.
+- **Data Entry**: Only admins can add new feeding records.
+- **User Login**: The application supports user login, with guests able to view data without logging in, while only admins can add data.
+- **Login and Logout**: Users can switch between login and logout modes at any time.
+
+## Project Structure
+
 ```
 worm_diary/
 │
@@ -19,16 +24,15 @@ worm_diary/
 ```
 
 
+## Dependencies
 
-## 依赖
-
-在运行此项目之前，请确保已安装以下依赖项：
+Before running this project, make sure you have the following dependencies installed:
 
 - Python 3.x
 - Streamlit
 - Pandas
 
-你可以使用以下命令安装所需的依赖：
+You can install the required dependencies with the following command:
 
 ```bash
 pip install streamlit pandas
