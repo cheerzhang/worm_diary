@@ -18,9 +18,9 @@ This introduction invites others to explore your worm diary while providing cont
 ```
 worm_diary/
 │
-├── worm_diary.csv # 数据存储文件
-├── main_page.py # 主应用程序代码
-└── README.md # 项目说明文件
+├── worm_diary.csv 
+├── main_page.py
+└── README.md 
 ```
 
 
